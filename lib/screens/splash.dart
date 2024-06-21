@@ -82,7 +82,7 @@ class SplashScreen extends StatelessWidget {
                       backgroundColor:MaterialStateProperty.all<Color>(Colors.grey.shade300),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                     ),
-                    onPressed: () => Navigator.pushNamed(context, '/agenda'),
+                    onPressed: () => Navigator.pushNamed(context, '/agenda_medica'),
                     child: const Text('Agendar Consultas'),
                   ),
                 ),
