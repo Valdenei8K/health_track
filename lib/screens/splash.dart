@@ -68,7 +68,7 @@ class SplashScreen extends StatelessWidget {
                       backgroundColor:MaterialStateProperty.all<Color>(Colors.grey.shade300),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                     ),
-                    onPressed: () => Navigator.pushNamed(context, '/imc'),
+                    onPressed: () => Navigator.pushNamed(context, '/medication'),
                     child: const Text('Lembrete de Medicamentos',style: TextStyle(
                       fontSize: 16, //tamanho da fonte
                     ),),
