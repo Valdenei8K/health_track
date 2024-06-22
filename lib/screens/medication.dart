@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() {
   runApp(const MedicationReminderApp());
@@ -32,7 +34,7 @@ class _MedicationReminderScreenState extends State<MedicationReminderScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _periodController = TextEditingController();
   List<String> _medications = [];
-  FlutterLocalNotificationsPlugin? _localNotificationsPlugin;
+  late FlutterLocalNotificationsPlugin _localNotificationsPlugin;
 
   @override
   void initState() {
@@ -134,22 +136,22 @@ class _MedicationReminderScreenState extends State<MedicationReminderScreen> {
   }
 
   void _initializeNotifications() {
+    tz.initializeTimeZones();
     _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    final InitializationSettings initializationSettings =
-    InitializationSettings(
+    final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
     );
 
-    _localNotificationsPlugin!.initialize(initializationSettings);
+    _localNotificationsPlugin.initialize(initializationSettings);
   }
 
   void _scheduleNotification(String name, int hours) {
-    final now = DateTime.now();
-    final notificationTime = now.add(Duration(hours: hours));
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    final tz.TZDateTime notificationTime = now.add(Duration(hours: hours));
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
@@ -163,12 +165,15 @@ class _MedicationReminderScreenState extends State<MedicationReminderScreen> {
     const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    _localNotificationsPlugin!.schedule(
+    _localNotificationsPlugin.zonedSchedule(
       0,
       'Lembrete de Medicamento',
       'Hora de tomar o medicamento: $name',
       notificationTime,
       platformChannelSpecifics,
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 }
