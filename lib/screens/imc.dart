@@ -143,13 +143,13 @@ class _IMCCalculatorState extends State<IMCCalculator> {
   String _calculateResult(double imc) {
     if(imc == 0.0) return '';
     if (imc < 18.5) {
-      return 'Underweight';
+      return 'Abaixo do peso';
     } else if (imc >= 18.5 && imc < 24.9) {
-      return 'Normal weight';
+      return 'Peso Normal';
     } else if (imc >= 25 && imc < 29.9) {
-      return 'Overweight';
+      return 'Sobrepeso';
     } else {
-      return 'Obese';
+      return 'Obesidade';
     }
   }
 
