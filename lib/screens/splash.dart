@@ -34,10 +34,12 @@ class SplashScreen extends StatelessWidget {
                     color: Colors.white, fontWeight: FontWeight.bold
                   ),),
                 // Substitua o AssetImage pelo caminho da sua imagem
-                SvgPicture.asset(
+                new SvgPicture.asset(
                   'assets/images/fitness.svg', // Caminho da sua imagem HT
                   width: 150,
                   height: 150,
+                  allowDrawingOutsideViewBox: true,
+
                 ),
                 const SizedBox(height: 20),
                 const Text(

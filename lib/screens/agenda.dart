@@ -24,7 +24,7 @@ class _AgendaMedicaState extends State<AgendaMedica> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lembrete de Consultas Médicas'),
+        title: Text('Lembrete de Consultas'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -58,8 +58,8 @@ class _AgendaMedicaState extends State<AgendaMedica> {
             TextField(
               controller: _typeController,
               decoration: const InputDecoration(
-                labelText: 'Tipo',
-                hintText: 'Exemplo: Consulta de rotina',
+                labelText: 'Especialidade',
+                hintText: 'Exemplo: Clinico Geral',
               ),
             ),
             const SizedBox(height: 20),

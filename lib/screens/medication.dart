@@ -33,7 +33,7 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
             TextField(
               controller: _typeController,
               decoration: const InputDecoration(
-                labelText: 'Tipo',
+                labelText: 'Nome do Remédio',
                 hintText: 'Exemplo: Tomar remédio',
               ),
             ),
@@ -88,7 +88,7 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
 
     if (type.isNotEmpty && interval.isNotEmpty && days.isNotEmpty) {
       setState(() {
-        _reminders.add('Tipo: $type, Intervalo: $interval horas, Dias: $days');
+        _reminders.add(': $type, Intervalo: $interval horas, Dias: $days');
       });
       _typeController.clear();
       _intervalController.clear();
