@@ -1,4 +1,4 @@
-# Meu Bem
+# Aplicativo Meu Bem: Saúde equelibrada
 
 A new Flutter project.
 
