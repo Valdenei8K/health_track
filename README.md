@@ -1,6 +1,6 @@
 # Aplicativo Meu Bem: Saúde equelibrada
 
-A new Flutter project.
+ O Meu Bem é um aplicativo de monitoramento de saúde desenvolvido para ajudar os pacientes a gerenciar melhor sua saúde 
 
 ## Getting Started
 
