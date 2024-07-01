@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../widget/button.dart'; // Supondo que você tenha um widget de botão reutilizável
+import '../widget/dialog-exclusao.dart'; // Supondo que você tenha um widget de diálogo de exclusão
+
 class AgendaMedica extends StatefulWidget {
   const AgendaMedica({super.key});
 
@@ -13,6 +16,8 @@ class _AgendaMedicaState extends State<AgendaMedica> {
   List<String> _appointments = [];
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  bool isEdit = false;
+  int? _editedIndex;
 
   @override
   void initState() {
@@ -59,13 +64,13 @@ class _AgendaMedicaState extends State<AgendaMedica> {
               controller: _typeController,
               decoration: const InputDecoration(
                 labelText: 'Especialidade',
-                hintText: 'Exemplo: Clinico Geral',
+                hintText: 'Exemplo: Clínico Geral',
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _addAppointment,
-              child: const Text('Adicionar'),
+            buttonElevated(
+              onPressed: isEdit ? _saveAppointment : _addAppointment,
+              text: isEdit ? 'Salvar' : 'Adicionar',
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -74,9 +79,35 @@ class _AgendaMedicaState extends State<AgendaMedica> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(_appointments[index]),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () => _removeAppointment(index),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () => _editAppointment(index),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => dialogDelete(
+                            context: context,
+                            index: index,
+                            onPressed: () {
+                              setState(() {
+                                _appointments.removeAt(index);
+                                _saveAppointments();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Lembrete excluído com sucesso!'),
+                                  ),
+                                );
+                              });
+                              Navigator.of(context)
+                                  .pop(); // Fechar o AlertDialog após a exclusão
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -115,8 +146,11 @@ class _AgendaMedicaState extends State<AgendaMedica> {
   }
 
   void _addAppointment() {
-    if (_selectedDate != null && _selectedTime != null && _typeController.text.isNotEmpty) {
-      String date = '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}';
+    if (_selectedDate != null &&
+        _selectedTime != null &&
+        _typeController.text.isNotEmpty) {
+      String date =
+          '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}';
       String time = _selectedTime!.format(context);
       String type = _typeController.text;
 
@@ -127,6 +161,11 @@ class _AgendaMedicaState extends State<AgendaMedica> {
       _selectedDate = null;
       _selectedTime = null;
       _saveAppointments();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lembrete salvo com sucesso!'),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -136,11 +175,59 @@ class _AgendaMedicaState extends State<AgendaMedica> {
     }
   }
 
-  void _removeAppointment(int index) {
+  void _editAppointment(int index) {
+    // Extrair os dados do lembrete selecionado
+    String appointment = _appointments[index];
+    // Dividir a string do lembrete para recuperar os valores individuais
+    List<String> appointmentParts = appointment.split(' - ');
+
+    // Preencher os campos com os valores do lembrete selecionado
     setState(() {
-      _appointments.removeAt(index);
+      isEdit = true;
+      _editedIndex = index;
+      _typeController.text = appointmentParts[1]; // Especialidade
+      // Extrair a data e hora do lembrete para preencher _selectedDate e _selectedTime
+      List<String> dateTimeParts = appointmentParts[0].split('/');
+      int day = int.parse(dateTimeParts[0]);
+      int month = int.parse(dateTimeParts[1]);
+      int year = int.parse(dateTimeParts[2]);
+      _selectedDate = DateTime(year, month, day);
+      _selectedTime = TimeOfDay(
+        hour: _selectedTime!.hour,
+        minute: _selectedTime!.minute,
+      );
     });
-    _saveAppointments();
+  }
+
+  void _saveAppointment() {
+    if (_selectedDate != null &&
+        _selectedTime != null &&
+        _typeController.text.isNotEmpty) {
+      String date =
+          '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}';
+      String time = _selectedTime!.format(context);
+      String type = _typeController.text;
+
+      setState(() {
+        _appointments[_editedIndex!] = '$date $time - $type';
+        isEdit = false;
+        _typeController.clear();
+        _selectedDate = null;
+        _selectedTime = null;
+      });
+      _saveAppointments();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lembrete editado com sucesso!'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, preencha todos os campos!'),
+        ),
+      );
+    }
   }
 
   void _saveAppointments() async {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../widget/button.dart';
 
 class IMCCalculator extends StatefulWidget {
   const IMCCalculator({super.key});
@@ -9,10 +12,11 @@ class IMCCalculator extends StatefulWidget {
 }
 
 class _IMCCalculatorState extends State<IMCCalculator> {
-  final TextEditingController _weightController = TextEditingController(text: "");
-  final TextEditingController _heightController = TextEditingController(text: "");
+  final TextEditingController _weightController =
+      TextEditingController(text: "");
+  final TextEditingController _heightController =
+      TextEditingController(text: "");
   final TextEditingController _ageController = TextEditingController(text: "");
-  String _sex = '';
   double _imc = 0.0;
   String _imcResult = '';
 
@@ -40,55 +44,28 @@ class _IMCCalculatorState extends State<IMCCalculator> {
                 controller: _weightController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Peso (kg)',
-                  hintText: 'Exemple: 50'
-                ),
+                    labelText: 'Peso (kg)', hintText: 'Exemple: 50'),
+                inputFormatters: [LengthLimitingTextInputFormatter(6)],
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _heightController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Altura (m)',
-                ),
+                    labelText: 'Altura (m)', hintText: 'Exemple: 1.56'),
+                inputFormatters: [LengthLimitingTextInputFormatter(4)],
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _ageController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Idade',
-                ),
+                    labelText: 'Idade', hintText: 'Exemple: 30'),
+                inputFormatters: [LengthLimitingTextInputFormatter(3)],
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Sexo: '),
-                  Radio(
-                    value: 'Male',
-                    groupValue: _sex,
-                    onChanged: (value) {
-                      setState(() {
-                        _sex = value!;
-                      });
-                    },
-                  ),
-                  const Text('Masculino'),
-                  Radio(
-                    value: 'Female',
-                    groupValue: _sex,
-                    onChanged: (value) {
-                      setState(() {
-                        _sex = value!;
-                      });
-                    },
-                  ),
-                  const Text('Feminino'),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
+              buttonElevated(
+                text: 'Calcular',
                 onPressed: () {
                   if (_validateFields()) {
                     _calculateIMC();
@@ -101,7 +78,6 @@ class _IMCCalculatorState extends State<IMCCalculator> {
                     );
                   }
                 },
-                child: const Text('Calcular'),
               ),
               const SizedBox(height: 20),
               Text(
@@ -123,8 +99,7 @@ class _IMCCalculatorState extends State<IMCCalculator> {
   bool _validateFields() {
     return _weightController.text.isNotEmpty &&
         _heightController.text.isNotEmpty &&
-        _ageController.text.isNotEmpty &&
-        _sex.isNotEmpty;
+        _ageController.text.isNotEmpty;
   }
 
   void _calculateIMC() {
@@ -141,7 +116,7 @@ class _IMCCalculatorState extends State<IMCCalculator> {
   }
 
   String _calculateResult(double imc) {
-    if(imc == 0.0) return '';
+    if (imc == 0.0) return '';
     if (imc < 18.5) {
       return 'Abaixo do peso';
     } else if (imc >= 18.5 && imc < 24.9) {
@@ -159,18 +134,16 @@ class _IMCCalculatorState extends State<IMCCalculator> {
     await prefs.setDouble('weight', double.parse(_weightController.text));
     await prefs.setDouble('height', double.parse(_heightController.text));
     await prefs.setInt('age', int.parse(_ageController.text));
-    await prefs.setString('sex', _sex);
     await prefs.setDouble('lastIMC', _imc);
   }
 
   void _loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(!prefs.containsKey('weight')) return;
+    if (!prefs.containsKey('weight')) return;
     setState(() {
       _weightController.text = prefs.getDouble('weight').toString();
       _heightController.text = prefs.getDouble('height').toString();
       _ageController.text = prefs.getInt('age').toString();
-      _sex = prefs.getString('sex') ?? '';
       _imc = prefs.getDouble('lastIMC') ?? 0.0;
       _imcResult = _calculateResult(_imc);
     });
