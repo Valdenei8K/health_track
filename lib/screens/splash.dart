@@ -13,15 +13,13 @@ class SplashScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF248C85), //verde escuro
-            Color(0xFF79F1D5), //verde claro
-            //Color.fromARGB(255, 26, 26, 21), Marrom
-            //Color.fromARGB(59, 130, 273, 0) Marrom
-          ],
-        )),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF248C85), // Verde escuro
+                Color(0xFF79F1D5), // Verde claro
+              ],
+            )),
         child: Center(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -35,9 +33,8 @@ class SplashScreen extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
-                // Substitua o AssetImage pelo caminho da sua imagem
-                new SvgPicture.asset(
-                  'assets/images/fitness.svg', // Caminho da sua imagem HT
+                SvgPicture.asset(
+                  'assets/images/fitness.svg', // Caminho da sua imagem
                   width: 150,
                   height: 150,
                   allowDrawingOutsideViewBox: true,
@@ -51,7 +48,7 @@ class SplashScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 const Text(
                   'Saúde Equilibrada',
                   style: TextStyle(
@@ -71,11 +68,13 @@ class SplashScreen extends StatelessWidget {
                           Colors.blueGrey.shade800),
                     ),
                     onPressed: () => Navigator.pushNamed(context, '/imc'),
-                    child: const Text('Calcular IMC',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600 //tamanho da fonte
-                            )),
+                    child: const Text(
+                      'Calcular IMC',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600, // Tamanho da fonte
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -93,9 +92,9 @@ class SplashScreen extends StatelessWidget {
                     child: const Text(
                       'Lembrete de Medicamentos',
                       style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600 //tamanho da fonte
-                          ),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600, // Tamanho da fonte
+                      ),
                     ),
                   ),
                 ),
@@ -114,9 +113,29 @@ class SplashScreen extends StatelessWidget {
                     child: const Text(
                       'Lembrete de Consultas',
                       style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600 //tamanho da fonte
-                          ),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600, // Tamanho da fonte
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  width: 300,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.grey.shade300),
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.blueGrey.shade800),
+                    ),
+                    onPressed: () => Navigator.pushNamed(context, '/bula'),
+                    child: const Text(
+                      'Buscar Bula',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600, // Tamanho da fonte
+                      ),
                     ),
                   ),
                 ),
@@ -130,12 +149,12 @@ class SplashScreen extends StatelessWidget {
                       else if (Platform.isIOS)
                         {exit(0)}
                     },
-                    style:
-                        OutlinedButton.styleFrom(foregroundColor: Colors.white),
+                    style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white),
                     child: const Text(
                       'Sair',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w700),
                     ),
                   ),
                 )
