@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:health_truck/widget/text_labels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/button.dart';
+import '../widget/default_layout.dart';
+import '../widget/textFormField.dart';
 
 class IMCCalculator extends StatefulWidget {
   const IMCCalculator({super.key});
@@ -28,23 +31,25 @@ class _IMCCalculatorState extends State<IMCCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Calculadora de IMC'),
-      ),
+    return Layout(
+      title: 'Calculadora de IMC',
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
+              buildText('Peso (kg)'),
               TextField(
                 controller: _weightController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                    labelText: 'Peso (kg)', hintText: 'Exemple: 50'),
+                    fillColor: Colors.white,
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16))),
+                    hintText: 'Exemple: 50'),
                 inputFormatters: [LengthLimitingTextInputFormatter(6)],
               ),
               const SizedBox(height: 20),
@@ -64,9 +69,10 @@ class _IMCCalculatorState extends State<IMCCalculator> {
                 inputFormatters: [LengthLimitingTextInputFormatter(3)],
               ),
               const SizedBox(height: 20),
-              buttonElevated(
+              customElevatedButton(
+                context: context,
                 text: 'Calcular',
-                onPressed: () {
+                onPress: () {
                   if (_validateFields()) {
                     _calculateIMC();
                     _saveData();
@@ -78,6 +84,7 @@ class _IMCCalculatorState extends State<IMCCalculator> {
                     );
                   }
                 },
+                color: Colors.black12,
               ),
               const SizedBox(height: 20),
               Text(

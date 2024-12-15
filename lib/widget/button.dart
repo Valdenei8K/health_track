@@ -6,7 +6,7 @@ Widget buttonElevated({
 }) {
   return ElevatedButton(
     style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
                 side: BorderSide(color: Colors.white54)))),
@@ -17,4 +17,47 @@ Widget buttonElevated({
           fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
     ),
   );
+}
+
+Widget customElevatedButton({
+  required BuildContext context,
+  required String text,
+  required Function onPress,
+  required Color color,
+  borderRadius = 16.0,
+  onLoad = false,
+  disabled = false,
+  double? elevation,
+  IconData? icon,
+}) {
+  return ElevatedButton(
+      style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(color),
+          elevation:
+              elevation != null ? WidgetStateProperty.all(elevation) : null,
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ))),
+      onPressed: disabled || onLoad ? null : () => onPress(),
+      child: onLoad
+          ? SizedBox(
+              height: 20,
+              width: 20,
+              child: const CircularProgressIndicator(color: Colors.white),
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon != null ? Icon(icon, size: 17) : const SizedBox(),
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ));
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../widget/button.dart'; // Supondo que você tenha um widget de botão reutilizável
-import '../widget/dialog-exclusao.dart'; // Supondo que você tenha um widget de diálogo de exclusão
+import '../widget/button.dart';
+import '../widget/default_layout.dart';
+import '../widget/dialog-exclusao.dart';
 
 class AgendaMedica extends StatefulWidget {
   const AgendaMedica({super.key});
@@ -27,10 +28,8 @@ class _AgendaMedicaState extends State<AgendaMedica> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Lembrete de Consultas'),
-      ),
+    return Layout(
+      title: 'Lembrete de Consultas',
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -68,9 +67,11 @@ class _AgendaMedicaState extends State<AgendaMedica> {
               ),
             ),
             const SizedBox(height: 20),
-            buttonElevated(
-              onPressed: isEdit ? _saveAppointment : _addAppointment,
+            customElevatedButton(
+              context: context,
               text: isEdit ? 'Salvar' : 'Adicionar',
+              onPress: isEdit ? _saveAppointment : _addAppointment,
+              color: Colors.black12,
             ),
             const SizedBox(height: 20),
             Expanded(

@@ -21,7 +21,9 @@ class HealthTruck extends StatelessWidget {
       builder: (context, child) {
         return GetMaterialApp(
           title: 'Health Truck',
-          theme: ThemeData.dark(),
+          theme: ThemeData.dark().copyWith(
+            textTheme: Typography().white.apply(fontFamily: 'TitilliumWeb'),
+          ),
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.light,
           debugShowCheckedModeBanner: false,

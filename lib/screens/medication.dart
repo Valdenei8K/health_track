@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:health_truck/constants_colors.dart';
+import 'package:health_truck/widget/text_labels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../widget/button.dart'; // Supondo que você tenha um widget de botão reutilizável
+import '../widget/button.dart';
+import '../widget/textFormField.dart';
 
 class MedicationReminderApp extends StatefulWidget {
   const MedicationReminderApp({super.key});
@@ -27,62 +30,107 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsDefaults.background,
       appBar: AppBar(
-        title: const Text('Lembrete de Medicamentos'),
+        backgroundColor: ColorsDefaults.background,
+        title: buildTexTitle('Lembrete de Medicamentos'),
+        centerTitle: true, automaticallyImplyLeading: false
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
+            buildText('Nome do Remédio'),
+            textForm(
+              textInputAction: TextInputAction.next,
+              prefixIcon: const Icon(Icons.medication),
               controller: _typeController,
-              decoration: const InputDecoration(
-                labelText: 'Nome do Remédio',
-                hintText: 'Exemplo: Tomar remédio',
+              maxLength: 20,
+              textInputType: TextInputType.text,
+              obscureText: false,
+              textHelper: 'Exemplo: Tomar remédio',
+              autofillHints: [AutofillHints.name],
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildText('Intervalo (em horas)'),
+                    textForm(
+                      textInputAction: TextInputAction.next,
+                      prefixIcon: const Icon(Icons.access_time),
+                      controller: _intervalController,
+                      maxLength: 2,
+                      textInputType: TextInputType.number,
+                      obscureText: false,
+                      textHelper: 'Exemplo: 8',
+                      autofillHints: [AutofillHints.name],
+                    ),
+                  ],
+                )),
+                SizedBox(width: 10),
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildText('Número de dias'),
+                    textForm(
+                      textInputAction: TextInputAction.done,
+                      maxLength: 2,
+                      prefixIcon: const Icon(Icons.calendar_today),
+                      controller: _daysController,
+                      textInputType: TextInputType.number,
+                      obscureText: false,
+                      textHelper: 'Exemplo: 7',
+                      autofillHints: [AutofillHints.name],
+                    ),
+                  ],
+                ))
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30.0),
+              child: customElevatedButton(
+                context: context,
+                text: isEdit ? 'Salvar' : 'Adicionar',
+                onPress: isEdit ? _saveEditionReminder : _addReminder,
+                color: Colors.black12,
               ),
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _intervalController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Intervalo (em horas)',
-                hintText: 'Exemplo: 8',
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _daysController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Número de dias',
-                hintText: 'Exemplo: 7',
-              ),
-            ),
-            const SizedBox(height: 20),
-            buttonElevated(
-              onPressed: isEdit ? _saveEditionReminder : _addReminder,
-              text: (isEdit ? 'Salvar' : 'Adicionar'),
-            ),
-            const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
                 itemCount: _reminders.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_reminders[index]),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () => _editReminder(index),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => _removeReminder(index),
-                        )
-                      ],
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      title: Text(_reminders[index],
+                          style: TextStyle(color: Colors.black)),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            style: ButtonStyle(
+                              foregroundColor:
+                                  WidgetStateProperty.all<Color>(Colors.black),
+                            ),
+                            onPressed: () => _editReminder(index),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => _removeReminder(index),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 },
