@@ -11,7 +11,7 @@ class Layout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsDefaults.background,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: ColorsDefaults.background,
         title: buildTexTitle(title),

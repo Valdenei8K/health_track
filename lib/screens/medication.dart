@@ -4,6 +4,7 @@ import 'package:health_truck/widget/text_labels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/button.dart';
+import '../widget/default_layout.dart';
 import '../widget/textFormField.dart';
 
 class MedicationReminderApp extends StatefulWidget {
@@ -29,14 +30,8 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsDefaults.background,
-      appBar: AppBar(
-        backgroundColor: ColorsDefaults.background,
-        title: buildTexTitle('Lembrete de Medicamentos'),
-        centerTitle: true, automaticallyImplyLeading: false
-
-      ),
+    return Layout(
+      title: 'Lembrete de Medicamentos',
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -45,7 +40,6 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
             buildText('Nome do Remédio'),
             textForm(
               textInputAction: TextInputAction.next,
-              prefixIcon: const Icon(Icons.medication),
               controller: _typeController,
               maxLength: 20,
               textInputType: TextInputType.text,
@@ -62,7 +56,6 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                     buildText('Intervalo (em horas)'),
                     textForm(
                       textInputAction: TextInputAction.next,
-                      prefixIcon: const Icon(Icons.access_time),
                       controller: _intervalController,
                       maxLength: 2,
                       textInputType: TextInputType.number,
@@ -81,7 +74,6 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                     textForm(
                       textInputAction: TextInputAction.done,
                       maxLength: 2,
-                      prefixIcon: const Icon(Icons.calendar_today),
                       controller: _daysController,
                       textInputType: TextInputType.number,
                       obscureText: false,
@@ -98,7 +90,6 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                 context: context,
                 text: isEdit ? 'Salvar' : 'Adicionar',
                 onPress: isEdit ? _saveEditionReminder : _addReminder,
-                color: Colors.black12,
               ),
             ),
             Expanded(
@@ -108,17 +99,17 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: ColorsDefaults.background,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: ListTile(
                       title: Text(_reminders[index],
-                          style: TextStyle(color: Colors.black)),
+                          style: TextStyle(fontWeight: FontWeight.w700)),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit),
+                            icon: const Icon(Icons.edit, color: Colors.white),
                             style: ButtonStyle(
                               foregroundColor:
                                   WidgetStateProperty.all<Color>(Colors.black),
@@ -126,7 +117,7 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                             onPressed: () => _editReminder(index),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete),
+                            icon: const Icon(Icons.delete, color: Colors.white),
                             onPressed: () => _removeReminder(index),
                           )
                         ],

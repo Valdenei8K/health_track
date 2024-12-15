@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_truck/constants_colors.dart';
 
 Padding buildText(String title) {
   return Padding(
@@ -8,7 +9,7 @@ Padding buildText(String title) {
       style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: Colors.white,
+        color: ColorsDefaults.background,
       ),
     ),
   );

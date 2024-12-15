@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants_colors.dart';
+
 Widget buttonElevated({
   required String text,
   Function()? onPressed,
@@ -23,7 +25,6 @@ Widget customElevatedButton({
   required BuildContext context,
   required String text,
   required Function onPress,
-  required Color color,
   borderRadius = 16.0,
   onLoad = false,
   disabled = false,
@@ -32,7 +33,7 @@ Widget customElevatedButton({
 }) {
   return ElevatedButton(
       style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(color),
+          backgroundColor: WidgetStateProperty.all(ColorsDefaults.background),
           elevation:
               elevation != null ? WidgetStateProperty.all(elevation) : null,
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(

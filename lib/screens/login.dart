@@ -14,7 +14,7 @@ class Login extends StatelessWidget {
     final loginProvider = LoginProvider();
 
     return Scaffold(
-      backgroundColor: ColorsDefaults.background,
+      backgroundColor: Colors.white,
       body: Form(
         key: loginProvider.formKey,
         child: SingleChildScrollView(
@@ -67,7 +67,6 @@ class Login extends StatelessWidget {
                               context: context,
                               text: 'Login',
                               onPress: () => loginProvider.login(),
-                              color: Colors.black12,
                               onLoad: loginProvider.isLogin,
                             ),
                           ),
@@ -80,7 +79,6 @@ class Login extends StatelessWidget {
                               context: context,
                               text: 'Criar minha conta',
                               onPress: () => loginProvider.goToCreateUser(),
-                              color: Colors.black12,
                             ),
                           ),
                         ),

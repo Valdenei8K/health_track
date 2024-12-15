@@ -119,7 +119,6 @@ class CreateUser extends StatelessWidget {
                     context: context,
                     text: 'Cadastrar',
                     onPress: () => createUserProvider.createUser(),
-                    color: Colors.black12,
                   ),
                 ),
               ],

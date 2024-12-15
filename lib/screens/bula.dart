@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';  // Importando o pacote Syncfusion
 import 'dart:typed_data';
+import '../widget/default_layout.dart';
+import '../widget/textFormField.dart';
+import '../widget/text_labels.dart';
 import 'produto_model.dart'; // Importando o modelo Produto
 
 class BulaApp extends StatefulWidget {
@@ -66,27 +69,23 @@ class _BulaAppState extends State<BulaApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Buscar Bula'),
-        backgroundColor: const Color(0xFF248C85),
-      ),
+    return Layout(
+      title: 'Buscar Bula',
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            buildText('Digite o nome do medicamento'),
+            buildTextField(
               controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Digite o nome do medicamento',
-                hintText: 'Exemplo: Paracetamol',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
+              keyboardType: TextInputType.number,
+              hintText: 'Exemplo: Paracetamol',
+              prefixIcon: Icon(Icons.search),
               onChanged: (value) {
                 fetchProdutos(value);
               },
             ),
+            // TextField(
             const SizedBox(height: 20),
             isLoading
                 ? const CircularProgressIndicator()

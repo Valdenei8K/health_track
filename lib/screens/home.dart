@@ -3,6 +3,7 @@ import 'package:health_truck/constants_colors.dart';
 import 'package:health_truck/screens/agenda.dart';
 import 'package:health_truck/screens/imc.dart';
 import '../models/home_model.dart';
+import 'bula.dart';
 import 'medication.dart';
 
 class Home extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HomeState extends State<Home> {
   static const List<Widget> _widgetOptions = [
     IMCCalculator(),
     MedicationReminderApp(),
-    IMCCalculator(),
+    BulaApp(),
     AgendaMedica(),
   ];
 

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:health_truck/constants_colors.dart';
+import 'package:health_truck/widget/text_labels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/button.dart';
 import '../widget/default_layout.dart';
 import '../widget/dialog-exclusao.dart';
+import '../widget/textFormField.dart';
 
 class AgendaMedica extends StatefulWidget {
   const AgendaMedica({super.key});
@@ -33,82 +36,86 @@ class _AgendaMedicaState extends State<AgendaMedica> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
                   child: TextButton(
                     onPressed: () => _selectDate(context),
-                    child: Text(
-                      _selectedDate == null
-                          ? 'Selecionar Data'
-                          : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
-                    ),
+                    child: buttonDate(_selectedDate == null
+                        ? 'Selecionar Data'
+                        : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'),
                   ),
                 ),
                 Expanded(
                   child: TextButton(
                     onPressed: () => _selectTime(context),
-                    child: Text(
-                      _selectedTime == null
-                          ? 'Selecionar Hora'
-                          : _selectedTime!.format(context),
-                    ),
+                    child: buttonDate(_selectedTime == null
+                        ? 'Selecionar Hora'
+                        : _selectedTime!.format(context)),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            TextField(
+            buildText('Especialidade'),
+            buildTextField(
               controller: _typeController,
-              decoration: const InputDecoration(
-                labelText: 'Especialidade',
-                hintText: 'Exemplo: Clínico Geral',
-              ),
+              keyboardType: TextInputType.number,
+              hintText: 'Exemplo: Clínico Geral',
+              length: 100,
+              onChanged: (value) {},
             ),
             const SizedBox(height: 20),
             customElevatedButton(
               context: context,
               text: isEdit ? 'Salvar' : 'Adicionar',
               onPress: isEdit ? _saveAppointment : _addAppointment,
-              color: Colors.black12,
             ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
                 itemCount: _appointments.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_appointments[index]),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () => _editAppointment(index),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () => dialogDelete(
-                            context: context,
-                            index: index,
-                            onPressed: () {
-                              setState(() {
-                                _appointments.removeAt(index);
-                                _saveAppointments();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Lembrete excluído com sucesso!'),
-                                  ),
-                                );
-                              });
-                              Navigator.of(context)
-                                  .pop(); // Fechar o AlertDialog após a exclusão
-                            },
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: ColorsDefaults.background,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      title: Text(_appointments[index], style: TextStyle(fontWeight: FontWeight.w700)),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.white),
+                            onPressed: () => _editAppointment(index),
                           ),
-                        ),
-                      ],
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.white),
+                            onPressed: () => dialogDelete(
+                              context: context,
+                              index: index,
+                              onPressed: () {
+                                setState(() {
+                                  _appointments.removeAt(index);
+                                  _saveAppointments();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Lembrete excluído com sucesso!'),
+                                    ),
+                                  );
+                                });
+                                Navigator.of(context)
+                                    .pop(); // Fechar o AlertDialog após a exclusão
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -117,6 +124,18 @@ class _AgendaMedicaState extends State<AgendaMedica> {
           ],
         ),
       ),
+    );
+  }
+
+  Container buttonDate(dynamic dateSelected) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: ColorsDefaults.background),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      alignment: Alignment.center,
+      height: 44,
+      child: buildText(dateSelected),
     );
   }
 
