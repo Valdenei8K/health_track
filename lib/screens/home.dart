@@ -21,6 +21,7 @@ class _HomeState extends State<Home> {
     MedicationReminderApp(),
     BulaApp(),
     AgendaMedica(),
+    BulaApp(),
   ];
 
   final List<BottomNavItem> _bottomNavItems = [

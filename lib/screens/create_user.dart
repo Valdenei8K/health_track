@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:health_truck/constants_colors.dart';
 import 'package:health_truck/providers/create_user_provider.dart';
+import 'package:get/get.dart';
 
 import '../widget/button.dart';
+import '../widget/default_layout.dart';
 import '../widget/textFormField.dart';
 import '../widget/text_labels.dart';
 
@@ -11,18 +12,10 @@ class CreateUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final createUserProvider = CreateUserProvider();
+    final createUserProvider = Get.put(CreateUserProvider());
 
-    return Scaffold(
-      backgroundColor: ColorsDefaults.background,
-      appBar: AppBar(
-        title: buildTexTitle('Crie sua conta'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-      ),
+    return Layout(
+      title: ('Crie sua conta'),
       body: Form(
         key: createUserProvider.formKey,
         child: SingleChildScrollView(
@@ -50,14 +43,15 @@ class CreateUser extends StatelessWidget {
                           buildText('Altura'),
                           textForm(
                             textInputAction: TextInputAction.next,
-                            maxLength: 3,
+                            maxLength: 4,
                             controller: createUserProvider.heightController,
-                            textInputType: TextInputType.number,
+                            textInputType: TextInputType.text,
                             suffixIcon: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 11.0),
                               child: Text('cm', style: TextStyle(color: Colors.black)),
                             ),
                             obscureText: false,
+                            hintText: '156',
                             autofillHints: [AutofillHints.name],
                           ),
                         ],

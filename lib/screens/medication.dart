@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:health_truck/constants_colors.dart';
 import 'package:health_truck/widget/text_labels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/src/date_time.dart';
 
+import '../main.dart';
 import '../widget/button.dart';
 import '../widget/default_layout.dart';
+import '../widget/snack_bar.dart';
 import '../widget/textFormField.dart';
 
 class MedicationReminderApp extends StatefulWidget {
@@ -44,7 +48,7 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
               maxLength: 20,
               textInputType: TextInputType.text,
               obscureText: false,
-              textHelper: 'Exemplo: Tomar remédio',
+              hintText: 'Exemplo: Tomar remédio',
               autofillHints: [AutofillHints.name],
             ),
             Row(
@@ -60,7 +64,7 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                       maxLength: 2,
                       textInputType: TextInputType.number,
                       obscureText: false,
-                      textHelper: 'Exemplo: 8',
+                      hintText: 'Exemplo: 8',
                       autofillHints: [AutofillHints.name],
                     ),
                   ],
@@ -77,7 +81,7 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                       controller: _daysController,
                       textInputType: TextInputType.number,
                       obscureText: false,
-                      textHelper: 'Exemplo: 7',
+                      hintText: 'Exemplo: 7',
                       autofillHints: [AutofillHints.name],
                     ),
                   ],
@@ -170,17 +174,9 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
         _daysController.clear();
       });
       _saveReminders();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lembrete salvo com sucesso!'),
-        ),
-      );
+      SnackBarApp.success("Lembrete salvo com sucesso!");
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, preencha todos os campos!'),
-        ),
-      );
+      SnackBarApp.error("Por favor, preencha todos os campos!");
     }
   }
 
@@ -204,11 +200,7 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                 setState(() {
                   _reminders.removeAt(index);
                   _saveReminders();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Lembrete excluído com sucesso!'),
-                    ),
-                  );
+                  SnackBarApp.success("Lembrete excluído com sucesso!");
                 });
                 Navigator.of(context)
                     .pop(); // Fechar o AlertDialog após a exclusão
@@ -232,17 +224,9 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
         _daysController.clear();
       });
       _saveReminders();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lembrete salvo com sucesso!'),
-        ),
-      );
+      SnackBarApp.success("Lembrete salvo com sucesso!");
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, preencha todos os campos!'),
-        ),
-      );
+      SnackBarApp.error("Por favor, preencha todos os campos!");
     }
   }
 

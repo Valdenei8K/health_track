@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 import '../routes/routes.dart';
+import '../services/client_http.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,7 +23,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> initialPage() async {
     await Future.delayed(const Duration(seconds: 3));
-    Navigator.pushNamed(context, Routes.login);
+    final access = Get.find<ClientHttp>().accessToken.value;
+    final refresh = Get.find<ClientHttp>().refreshToken.value;
+    if (access.isNotEmpty && refresh.isNotEmpty) {
+      Get.toNamed(Routes.home);
+    } else {
+      Get.toNamed(Routes.login);
+    }
   }
 
   @override

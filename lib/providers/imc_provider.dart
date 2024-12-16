@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
-class ImcProvider extends ChangeNotifier {
+class ImcProvider extends GetxController {
   final TextEditingController weightController =
       TextEditingController(text: "");
   final TextEditingController heightController =
       TextEditingController(text: "");
   final TextEditingController ageController = TextEditingController(text: "");
-  double imc = 0.0;
-  String imcResult = '';
+  RxDouble imc = 0.0.obs;
+  RxString imcResult = ''.obs;
 
 
   void submitForm() {
@@ -30,9 +31,8 @@ class ImcProvider extends ChangeNotifier {
     double heightSquared = height * height;
     double imcCalc = weight / heightSquared;
     String result = _calculateResult(imcCalc);
-    imc = double.parse(imcCalc.toStringAsFixed(1));
-    imcResult = result;
-    notifyListeners();
+    imc.value = double.parse(imcCalc.toStringAsFixed(1));
+    imcResult.value = result;
   }
 
   String _calculateResult(double imc) {
@@ -54,7 +54,7 @@ class ImcProvider extends ChangeNotifier {
     await prefs.setDouble('weight', double.parse(weightController.text));
     await prefs.setDouble('height', double.parse(heightController.text));
     await prefs.setInt('age', int.parse(ageController.text));
-    await prefs.setDouble('lastIMC', imc);
+    await prefs.setDouble('lastIMC', imc.value);
   }
 
   void loadData() async {
@@ -64,11 +64,8 @@ class ImcProvider extends ChangeNotifier {
       weightController.text = prefs.getDouble('weight').toString();
       heightController.text = prefs.getDouble('height').toString();
       ageController.text = prefs.getInt('age').toString();
-      imc = prefs.getDouble('lastIMC') ?? 0.0;
-      imcResult = _calculateResult(imc);
-      print(prefs.getDouble('lastIMC'));
-      print(imc);
-      notifyListeners();
+      imc.value = prefs.getDouble('lastIMC') ?? 0.0;
+      imcResult = _calculateResult(imc.value).obs;
   }
 
 }

@@ -23,7 +23,7 @@ Widget textForm({
   int? maxLength,
   FocusNode? focusNode,
   Function(String)? onChanged,
-  String textHelper = "",
+  String hintText = "",
 }) {
   return TextFormField(
     focusNode: focusNode,
@@ -34,13 +34,14 @@ Widget textForm({
     textInputAction: textInputAction,
     maxLength: maxLength,
     decoration: InputDecoration(
-      errorStyle: const TextStyle(color: Colors.white),
+      errorStyle: const TextStyle(color: Colors.red),
       filled: true,
       fillColor: Colors.white,
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
       counterText: "",
-      helperText: textHelper,
+      hintText: hintText,
+      hintStyle: TextStyle(color: Colors.grey),
       border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(16))),
       focusedBorder: OutlineInputBorder(
@@ -75,12 +76,13 @@ Container buildTextField(
       onChanged: (value) => onChanged(value),
       style: TextStyle(color: ColorsDefaults.background),
       decoration: InputDecoration(
-        errorStyle: const TextStyle(color: Colors.white),
+        errorStyle: const TextStyle(color: Colors.grey),
         filled: true,
         fillColor: Colors.white,
         prefixIcon: prefixIcon,
         counterText: "",
         hintText: hintText,
+        hintStyle: TextStyle(color: Colors.grey),
         border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(16))),
         focusedBorder: OutlineInputBorder(

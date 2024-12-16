@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:health_truck/constants_colors.dart';
 import 'package:health_truck/widget/text_labels.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/provider.dart';
-
+import 'package:get/get.dart';
 import '../providers/imc_provider.dart';
 import '../widget/button.dart';
 import '../widget/default_layout.dart';
+import '../widget/snack_bar.dart';
 import '../widget/textFormField.dart';
 
 class IMCCalculator extends StatefulWidget {
@@ -18,12 +16,11 @@ class IMCCalculator extends StatefulWidget {
 }
 
 class _IMCCalculatorState extends State<IMCCalculator> {
-  late ImcProvider imcProvider;
+  final imcProvider = Get.put(ImcProvider());
 
   @override
   void initState() {
     super.initState();
-    imcProvider = Provider.of<ImcProvider>(context, listen: false);
     imcProvider.loadData();
   }
 
@@ -47,7 +44,7 @@ class _IMCCalculatorState extends State<IMCCalculator> {
                 length: 6,
                 onChanged: (value) => imcProvider.validateFields(),
               ),
-              buildText('Peso (kg)'),
+              buildText('Altura (m)'),
               buildTextField(
                 controller: imcProvider.heightController,
                 keyboardType: TextInputType.number,
@@ -59,7 +56,7 @@ class _IMCCalculatorState extends State<IMCCalculator> {
               buildTextField(
                 controller: imcProvider.ageController,
                 keyboardType: TextInputType.number,
-                hintText: 'Exemple: 1.56',
+                hintText: '30',
                 length: 3,
                 onChanged: (value) => imcProvider.validateFields(),
               ),
@@ -71,29 +68,27 @@ class _IMCCalculatorState extends State<IMCCalculator> {
                   if (imcProvider.validateFields()) {
                     imcProvider.submitForm();
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Por favor, preencha todos os campos!'),
-                      ),
-                    );
+                    SnackBarApp.error('Preencha todos os campos corretamente');
                   }
                 },
               ),
               const SizedBox(height: 20),
               Center(
-                child: Consumer<ImcProvider>(
-                  builder: (context, provider, child) {
+                child: Obx(
+                  () {
                     return Container(
                       child: Column(
                         children: [
                           Text(
-                            'Seu IMC: ${provider.imcResult}',
-                            style: TextStyle(fontSize: 20, color: ColorsDefaults.background),
+                            'Seu IMC: ${imcProvider.imcResult}',
+                            style: TextStyle(
+                                fontSize: 20, color: ColorsDefaults.background),
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'Último IMC: ${provider.imc}',
-                            style: TextStyle(fontSize: 20, color: ColorsDefaults.background),
+                            'Último IMC: ${imcProvider.imc}',
+                            style: TextStyle(
+                                fontSize: 20, color: ColorsDefaults.background),
                           ),
                         ],
                       ),

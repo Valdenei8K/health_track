@@ -6,7 +6,7 @@ import 'dart:typed_data';
 import '../widget/default_layout.dart';
 import '../widget/textFormField.dart';
 import '../widget/text_labels.dart';
-import 'produto_model.dart'; // Importando o modelo Produto
+import '../models/produto_model.dart'; // Importando o modelo Produto
 
 class BulaApp extends StatefulWidget {
   const BulaApp({super.key});

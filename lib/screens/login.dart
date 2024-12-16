@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:health_truck/constants_colors.dart';
 import 'package:health_truck/providers/login_provider.dart';
+import 'package:get/get.dart';
 
 import '../widget/button.dart';
 import '../widget/textFormField.dart';
@@ -11,7 +11,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginProvider = LoginProvider();
+    final loginProvider = Get.put(LoginProvider());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,7 +53,6 @@ class Login extends StatelessWidget {
                         textForm(
                           textInputAction: TextInputAction.done,
                           prefixIcon: const Icon(Icons.vpn_key),
-                          suffixIcon: const Icon(Icons.remove_red_eye_outlined),
                           controller: loginProvider.passwordController,
                           textInputType: TextInputType.visiblePassword,
                           obscureText: true,
@@ -67,7 +66,7 @@ class Login extends StatelessWidget {
                               context: context,
                               text: 'Login',
                               onPress: () => loginProvider.login(),
-                              onLoad: loginProvider.isLogin,
+                              onLoad: loginProvider.isLogin?.isTrue,
                             ),
                           ),
                         ),

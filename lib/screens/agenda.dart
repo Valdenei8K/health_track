@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widget/button.dart';
 import '../widget/default_layout.dart';
 import '../widget/dialog-exclusao.dart';
+import '../widget/snack_bar.dart';
 import '../widget/textFormField.dart';
 
 class AgendaMedica extends StatefulWidget {
@@ -181,17 +182,9 @@ class _AgendaMedicaState extends State<AgendaMedica> {
       _selectedDate = null;
       _selectedTime = null;
       _saveAppointments();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lembrete salvo com sucesso!'),
-        ),
-      );
+      SnackBarApp.success('Lembrete salvo com sucesso!');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, preencha todos os campos!'),
-        ),
-      );
+      SnackBarApp.error('Por favor, preencha todos os campos!');
     }
   }
 
@@ -236,17 +229,9 @@ class _AgendaMedicaState extends State<AgendaMedica> {
         _selectedTime = null;
       });
       _saveAppointments();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lembrete editado com sucesso!'),
-        ),
-      );
+      SnackBarApp.success('Lembrete editado com sucesso!');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, preencha todos os campos!'),
-        ),
-      );
+      SnackBarApp.error('Por favor, preencha todos os campos!');
     }
   }
 

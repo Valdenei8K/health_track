@@ -1,6 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:health_truck/services/create_user_service.dart';
 
-class CreateUserProvider extends ChangeNotifier {
+class CreateUserProvider extends GetxController {
+  CreateUserService authController = Get.find<CreateUserService>();
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController heightController = TextEditingController();
@@ -24,8 +27,13 @@ class CreateUserProvider extends ChangeNotifier {
 
   void createUser() {
     if (_formKey.currentState!.validate()) {
-      print('Validated');
-
+      authController.createUser(
+        name: nameController.text,
+        height: heightController.text,
+        weight: weightController.text,
+        email: emailController.text,
+        password: passwordController.text,
+      );
       }
   }
 
