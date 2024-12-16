@@ -63,7 +63,7 @@ class _AgendaMedicaState extends State<AgendaMedica> {
             buildText('Especialidade'),
             buildTextField(
               controller: _typeController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.text,
               hintText: 'Exemplo: Clínico Geral',
               length: 100,
               onChanged: (value) {},

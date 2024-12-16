@@ -78,7 +78,7 @@ class _BulaAppState extends State<BulaApp> {
             buildText('Digite o nome do medicamento'),
             buildTextField(
               controller: _searchController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.text,
               hintText: 'Exemplo: Paracetamol',
               prefixIcon: Icon(Icons.search),
               onChanged: (value) {
