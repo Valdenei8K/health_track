@@ -22,9 +22,12 @@ class Layout extends StatelessWidget {
         backgroundColor: ColorsDefaults.background,
         title: buildTexTitle(title),
         actions: [
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () => clearToken(),
+          Visibility(
+            visible: title != 'Crie sua conta',
+            child: IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () => clearToken(),
+            ),
           )],
         automaticallyImplyLeading: false,
         centerTitle: true,
