@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:health_truck/constants_colors.dart';
-import 'package:health_truck/widget/text_labels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:timezone/src/date_time.dart';
 
-import '../main.dart';
 import '../widget/button.dart';
 import '../widget/default_layout.dart';
 import '../widget/snack_bar.dart';
 import '../widget/textFormField.dart';
+import '../widget/text_labels.dart';
 
 class MedicationReminderApp extends StatefulWidget {
   const MedicationReminderApp({super.key});
@@ -49,7 +46,6 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
               textInputType: TextInputType.text,
               obscureText: false,
               hintText: 'Exemplo: Tomar remédio',
-              autofillHints: [AutofillHints.name],
             ),
             Row(
               children: [
@@ -65,7 +61,6 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                       textInputType: TextInputType.number,
                       obscureText: false,
                       hintText: 'Exemplo: 8',
-                      autofillHints: [AutofillHints.name],
                     ),
                   ],
                 )),
@@ -82,7 +77,6 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                       textInputType: TextInputType.number,
                       obscureText: false,
                       hintText: 'Exemplo: 7',
-                      autofillHints: [AutofillHints.name],
                     ),
                   ],
                 ))
@@ -91,10 +85,9 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 30.0),
               child: customElevatedButton(
-                context: context,
-                text: isEdit ? 'Salvar' : 'Adicionar',
-                onPress: isEdit ? _saveEditionReminder : _addReminder,
-              ),
+                  context: context,
+                  text: isEdit ? 'Salvar' : 'Adicionar',
+                  onPress: _addReminder),
             ),
             Expanded(
               child: ListView.builder(
@@ -107,23 +100,28 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: ListTile(
-                      title: Text(_reminders[index],
-                          style: TextStyle(fontWeight: FontWeight.w700)),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _reminders[index]
+                            .split('\n') // Divide as linhas do lembrete
+                            .map((line) => Text(
+                                  line,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700),
+                                ))
+                            .toList(),
+                      ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          // IconButton(
+                          //   icon: const Icon(Icons.edit, color: Colors.blue),
+                          //   onPressed: () => _editReminder(index),
+                          // ),
                           IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.white),
-                            style: ButtonStyle(
-                              foregroundColor:
-                                  WidgetStateProperty.all<Color>(Colors.black),
-                            ),
-                            onPressed: () => _editReminder(index),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.white),
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () => _removeReminder(index),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -137,38 +135,22 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
     );
   }
 
-  void _editReminder(int index) {
-    setState(() {
-      isEdit = true;
-      _editedIndex = index;
-      // Extrair os dados do lembrete selecionado
-      String reminder = _reminders[index];
-      // Dividir a string do lembrete para recuperar os valores individuais
-      List<String> reminderParts = reminder.split(', ');
-
-      // Preencher os controladores de texto com os valores do lembrete selecionado
-      _typeController.text =
-          reminderParts[0].substring(6); // Remove "Tipo: " do início
-      _intervalController.text = reminderParts[1].substring(
-          11,
-          reminderParts[1].indexOf(
-              ' horas')); // Remove "Intervalo: " e " horas" do início e do final
-      _daysController.text =
-          reminderParts[2].substring(6); // Remove "Dias: " do início
-    });
-  }
-
-  void _saveEditionReminder() {
+  void _addReminder() {
     final String type = _typeController.text;
-    final String interval = _intervalController.text;
-    final String days = _daysController.text;
+    final int? interval = int.tryParse(_intervalController.text);
+    final int? days = int.tryParse(_daysController.text);
 
-    if (type.isNotEmpty && interval.isNotEmpty && days.isNotEmpty) {
-      String editedReminder =
-          'Tipo: $type, Intervalo: $interval horas, Dias: $days';
+    if (type.isNotEmpty && interval != null && days != null) {
+      final List<DateTime> schedule = _generateSchedule(interval, days);
+      final String formattedSchedule = schedule
+          .map((date) =>
+              "${date.day}/${date.month} às ${date.hour}:${date.minute.toString().padLeft(2, '0')}")
+          .join('\n'); // Use '\n' para separar os horários por linha
+
       setState(() {
-        _reminders[_editedIndex!] = editedReminder;
-        isEdit = false;
+        _reminders.add(
+          'Nome do remédio: $type\nIntervalo: $interval horas\nNúmero de dias: $days\nHorários: $formattedSchedule',
+        );
         _typeController.clear();
         _intervalController.clear();
         _daysController.clear();
@@ -176,58 +158,27 @@ class _MedicationReminderAppState extends State<MedicationReminderApp> {
       _saveReminders();
       SnackBarApp.success("Lembrete salvo com sucesso!");
     } else {
-      SnackBarApp.error("Por favor, preencha todos os campos!");
+      SnackBarApp.error("Por favor, preencha todos os campos corretamente!");
     }
+  }
+
+  List<DateTime> _generateSchedule(int interval, int days) {
+    final List<DateTime> schedule = [];
+    DateTime startTime = DateTime.now();
+    final int totalHours = days * 24;
+
+    for (int hour = 0; hour < totalHours; hour += interval) {
+      schedule.add(startTime.add(Duration(hours: hour)));
+    }
+    return schedule;
   }
 
   void _removeReminder(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Confirmar exclusão"),
-          content: Text("Tem certeza que deseja excluir este lembrete?"),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Cancelar"),
-              onPressed: () {
-                Navigator.of(context).pop(); // Fechar o AlertDialog
-              },
-            ),
-            TextButton(
-              child: Text("Excluir"),
-              onPressed: () {
-                setState(() {
-                  _reminders.removeAt(index);
-                  _saveReminders();
-                  SnackBarApp.success("Lembrete excluído com sucesso!");
-                });
-                Navigator.of(context)
-                    .pop(); // Fechar o AlertDialog após a exclusão
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _addReminder() {
-    final String type = _typeController.text;
-    final String interval = _intervalController.text;
-    final String days = _daysController.text;
-    if (type.isNotEmpty && interval.isNotEmpty && days.isNotEmpty) {
-      setState(() {
-        _reminders.add('Tipo: $type, Intervalo: $interval horas, Dias: $days');
-        _typeController.clear();
-        _intervalController.clear();
-        _daysController.clear();
-      });
-      _saveReminders();
-      SnackBarApp.success("Lembrete salvo com sucesso!");
-    } else {
-      SnackBarApp.error("Por favor, preencha todos os campos!");
-    }
+    setState(() {
+      _reminders.removeAt(index);
+    });
+    _saveReminders();
+    SnackBarApp.success("Lembrete excluído com sucesso!");
   }
 
   void _saveReminders() async {
